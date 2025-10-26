@@ -1,122 +1,165 @@
+---
+# 🧠 Customer Segmentation Platform (ROSP)
 
-# Customer Churn Prediction (K-Means + Streamlit)
-
-A lightweight ML app that clusters telecom customers to identify churn-risk segments and lets you interactively explore and predict new customer data. Built with Python, Scikit-learn, Pandas, Matplotlib, and Streamlit.
+A complete **Customer Segmentation System** built with **Streamlit**, **FastAPI**, and **Machine Learning**.
+This project allows users to **sign up**, **log in**, and interact with a segmentation model that classifies customers based on their demographic and behavioral features.
 
 ---
 
-## 🔍 Features
+## 🚀 Features
 
-- **K-Means Clustering**  
-  Automatically segment customers into churn-risk clusters based on their behavior.
+### 🔐 Authentication
 
-- **Interactive Dashboard**  
-  Explore clusters with 2D/3D scatter plots, violin plots, and bar charts directly in your browser.
+* Secure **login** and **signup** system with password hashing (using `bcrypt` and `passlib`).
+* Session-based user management built with **Streamlit**.
 
-- **Real-Time Prediction**  
-  Upload a new customer CSV file and instantly get its cluster assignment.
+### 📊 Customer Segmentation
 
-- **Clean, Modular Code**  
-  Separate modules for preprocessing, clustering, inference, and UI for easy maintenance.
+* Predicts customer segment based on:
+
+  * Age
+  * Annual Income
+  * Spending Score
+* Uses **Nearest Centroid Algorithm** for clustering and segment prediction.
+
+### 🌐 REST API
+
+* Built using **FastAPI** for lightweight, fast, and production-ready deployment.
+* Endpoint `/predict` accepts customer data and returns the predicted segment.
+
+### 💾 Database Integration
+
+* Supports MongoDB for storing user credentials.
 
 ---
 
-## 📁 Repository Structure
+## 🧩 Project Structure
 
-\`\`\`
-churn-prediction/
+```
+ROSP/
 │
-├── data/                   # sample CSVs (raw & processed)
-├── src/
-│   ├── preprocessing.py    # data cleaning & feature engineering
-│   ├── clustering.py       # KMeans model training & saving
-│   ├── inference.py        # load model & predict new data
-│   └── utils.py            # helper functions
+├── main.py                 # Streamlit web app (login, signup, main UI)
+├── api.py                  # FastAPI backend for customer prediction
+├── db_functions.py         # MongoDB user handling (add/check credentials)
+├── requirements.txt        # Project dependencies
 │
-├── app/
-│   └── app.py              # Streamlit dashboard & upload form
-│
-├── notebooks/              # exploratory data analysis & model dev
-│
-├── requirements.txt        # pinned dependencies
-├── README.md               # this file
-└── run.py                  # shortcut to launch `app/app.py`
-\`\`\`
+├── Datasets/               # Contains input and clustered data CSVs
+├── Scripts/                # Core scripts and application logic
+├── notebook/               # Jupyter notebooks (exploration/training)
+├── temp/                   # Temporary data storage
+└── README.md               # (This file)
+```
 
 ---
 
-## 🚀 Quick Start
+## ⚙️ Installation and Setup
 
-1. **Clone the repo**  
-   \`\`\`bash
-   git clone https://github.com/Atomik28/churn-prediction.git
-   cd churn-prediction
-   \`\`\`
+### 1️⃣ Clone the Repository
 
-2. **Create & activate a virtual environment**  
-   \`\`\`bash
-   python -m venv .venv
-   source .venv/bin/activate    # macOS/Linux
-   .venv\Scripts\activate       # Windows
-   \`\`\`
+```bash
+git clone https://github.com/Atomik28/churn-prediction.git
+cd churn-prediction
+```
 
-3. **Install dependencies**  
-   \`\`\`bash
-   pip install -r requirements.txt
-   \`\`\`
+### 2️⃣ Create a Virtual Environment
 
-4. **Launch the app**  
-   \`\`\`bash
-   python run.py
-   # or: streamlit run app/app.py
-   \`\`\`
+```bash
+python -m venv venv
+venv\Scripts\activate   # On Windows
+```
 
-5. **Open in browser**  
-   Navigate to the URL printed in your terminal (usually \`http://localhost:8501\`).
+### 3️⃣ Install Dependencies
 
----
+```bash
+pip install -r requirements.txt
+```
 
-## 🛠️ How It Works
+### 4️⃣ Prepare Dataset
 
-1. **Data Loading**  
-   - CSV data is loaded into the model
+Place the file `clustered_customers.csv` inside the `Datasets` folder.
+It should include columns:
 
-2. **Clustering**  
-   - A K-Means model is trained on the processed data.  
-   - Cluster centroids and model parameters are saved.
-
-3. **Inference & Prediction**  
-   - New customer records uploaded via the web UI are processed the same way.  
-   - The saved K-Means model assigns each new record to a cluster and shows it in the 3D garph.
-
-4. **Dashboard UI**  
-   - Visualize cluster distributions, feature importance, and 3D scatter plots.  
-   - Upload CSVs, view predictions, and download segmented output.
+```
+Age, Annual Income, Spending Score, Segment
+```
 
 ---
 
-## 🧰 Tech Stack
+## 🧠 Run the Applications
 
-- **Python**  
-- **Pandas** & **NumPy** for data wrangling  
-- **Scikit-learn** for K-Means  
-- **Matplotlib** / **Plotly** for visualizations  
-- **Streamlit** for the web interface  
-- **Git** for version control  
+### ▶️ Streamlit Frontend
+
+```bash
+streamlit run main.py
+```
+
+Opens the **Customer Segmentation Web App** in your browser.
+
+### ▶️ FastAPI Backend
+
+```bash
+uvicorn api:app --reload
+```
+
+Runs the **Customer Segmentation API** at:
+
+```
+http://127.0.0.1:8000
+```
+
+* Visit `http://127.0.0.1:8000/docs` for interactive API documentation.
 
 ---
 
-## ➕ Next Steps
+## 🧪 Example API Request
 
-- Add a binary churn-classifier (e.g., logistic regression or XGBoost) for comparison.  
-- Implement caching (\`@st.cache_resource\`) to speed up model loads.  
-- Bundle as a Docker container for easy deployment.  
-- Integrate unit tests & CI with GitHub Actions.
+**POST** `/predict`
+
+```json
+{
+  "age": 35,
+  "annual_income": 50000,
+  "spending_score": 60
+}
+```
+
+**Response**
+
+```json
+{
+  "predicted_segment": 2
+}
+```
 
 ---
 
-## 🙋‍♂️ Contact
+## 🛠️ Tech Stack
 
-Prashant Dipak Kudtarkar  
-📧 prashant.kudtarkar@email.com  
-🔗 [GitHub](https://github.com/Atomik28) | [LinkedIn](https://www.linkedin.com/in/prashant-kudtarkar-283411290/)
+| Layer            | Technology   |
+| ---------------- | ------------ |
+| Frontend         | Streamlit    |
+| Backend          | FastAPI      |
+| Machine Learning | scikit-learn |
+| Database         | MongoDB      |
+| Visualization    | Plotly       |
+| Language         | Python 3.10+ |
+
+---
+
+## 🧾 License
+
+This project is open-source and available under the **MIT License**.
+
+---
+
+## 👤 Author
+**Prashant Kudtarkar**
+
+## Contributor
+**Brijesh Maurya**
+**Shubham Khandale**
+**Tanisha Kadam**
+
+B.E. Information Technology — Mumbai University
+
+---
